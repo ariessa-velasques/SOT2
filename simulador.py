@@ -25,8 +25,9 @@ class MemoryManagementSimulator:
         # Fila para o algoritmo de substituição FIFO.
         self.fila_fifo = deque()
         
-        # Contador de falhas de página.
+         # Contadores de estatísticas.
         self.falhas_de_pagina = 0
+        self.hits = 0 
 
     def acessar_endereco_virtual(self, pagina_virtual):
         """
@@ -40,6 +41,7 @@ class MemoryManagementSimulator:
 
         # Se o bit de presença for 1, a página está na memória (hit).
         if self.tabela_paginas[pagina_virtual][0] == 1:
+            self.hits += 1
             print(f"  -> Hit! Página {pagina_virtual} já está na memória física no quadro {self.tabela_paginas[pagina_virtual][1]}.\n")
         else:
             # Caso contrário, ocorre uma falha de página (page fault).
@@ -109,20 +111,45 @@ class MemoryManagementSimulator:
             self.acessar_endereco_virtual(pagina)
             
         print("--- FIM DA SIMULAÇÃO ---")
-        print(f"Total de Page Faults: {self.falhas_de_pagina}")
+        
+        total_acessos = len(sequencia_acesso)
+        if total_acessos > 0:
+            taxa_falhas = (self.falhas_de_pagina / total_acessos) * 100
+            taxa_hits = (self.hits / total_acessos) * 100
+        else:
+            taxa_falhas = taxa_hits = 0
+
+        print(f"Total de Acessos: {total_acessos}")
+        print(f"Total de Page Faults: {self.falhas_de_pagina} ({taxa_falhas:.2f}%)")
+        print(f"Total de Hits: {self.hits} ({taxa_hits:.2f}%)")
 
 
 # --- FUNÇÃO PRINCIPAL PARA EXECUÇÃO ---
+# --- FUNÇÃO PRINCIPAL PARA EXECUÇÃO ---
 def main():
     """
-    Função principal que configura e executa o simulador.
+    Função principal que configura e executa o simulador de forma interativa.
     """
-    # --- ENTRADAS DA SIMULAÇÃO (Valores fixos para teste) ---
-    quadros_memoria_fisica = 3
-    paginas_memoria_virtual = 10
-    sequencia_acesso = [0, 1, 2, 3, 0, 4, 1, 5, 2, 6, 3, 7, 4, 8, 5, 9]
+    print("--- Simulador de Gerenciamento de Memória com Paginação ---")
+    print("Por favor, forneça os dados para a simulação.\n")
 
-    # Cria uma instância do simulador
+    try:
+        # Solicita e valida as entradas do usuário
+        quadros_memoria_fisica = int(input("1. Digite o tamanho da Memória Física (em nº de quadros): "))
+        paginas_memoria_virtual = int(input("2. Digite o tamanho da Memória Virtual (em nº de páginas): "))
+        
+        entrada_sequencia = input("3. Digite a sequência de acesso (páginas separadas por espaço): ")
+        
+        # Converte a string de entrada em uma lista de números inteiros
+        sequencia_acesso = [int(p) for p in entrada_sequencia.split()]
+
+    except ValueError:
+        print("\n[ERRO] Entrada inválida. Por favor, certifique-se de digitar apenas números inteiros.")
+        return # Encerra o programa se a entrada for inválida
+    
+    print("-" * 50)
+
+    # Cria uma instância do simulador com os dados fornecidos pelo usuário
     simulador = MemoryManagementSimulator(
         quadros_fisicos=quadros_memoria_fisica,
         paginas_virtuais=paginas_memoria_virtual
@@ -131,13 +158,13 @@ def main():
     # Executa a simulação com a sequência de acesso
     simulador.executar_simulacao(sequencia_acesso=sequencia_acesso)
 
-    # --- PRÓXIMOS PASSOS ---
+# Garante que a função main() será executada quando o script for rodado
+if __name__ == "__main__":
+    main()
+
+ # --- PRÓXIMOS PASSOS ---
     # 1. Tornar as entradas interativas: Permitir que o usuário digite os tamanhos das memórias
     #    e a sequência de acesso ao invés de usar valores fixos.
     # 2. Criar mais cenários de teste: Adicionar outras listas de `sequencia_acesso` para
     #    validar o comportamento do simulador em diferentes condições.
     # 3. Escrever o relatório e a documentação final do trabalho.
-
-# Garante que a função main() será executada quando o script for rodado
-if __name__ == "__main__":
-    main()
