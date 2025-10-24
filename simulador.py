@@ -96,9 +96,29 @@ class MemoryManagementSimulator:
         """
         Exibe o estado atual da memória física e da fila FIFO.
         """
-        print("   Estado atual da Memória Física (Quadros):", self.memoria_fisica)
-        print("   Estado atual da Fila FIFO (Páginas):   ", list(self.fila_fifo), "\n")
+        # Exibe o estado bruto da memória física
+        print("   Estado da Memória Física (Quadros):", self.memoria_fisica)
+        # Exibe o estado da estrutura de controle do algoritmo (FIFO)
+        print("   Estado da Fila FIFO (Páginas):   ", list(self.fila_fifo))
+        # Exibe o mapeamento explícito (Requisito do enunciado)
+        print("   Mapeamento (Página Virtual -> Quadro Físico):")
+        
+        # Cria um dicionário com apenas as páginas que estão na memória
+        mapeamento_ativo = {}
+        for i, info in enumerate(self.tabela_paginas):
+            # info[0] é o bit de presença, info[1] é o quadro
+            if info[0] == 1:
+                mapeamento_ativo[i] = info[1]
 
+        if not mapeamento_ativo:
+            print("     (Nenhuma página na memória física)")
+        else:
+            # Ordena o mapeamento pelo número do quadro (índice 1 do valor do dict)
+            # Isso torna a leitura mais limpa e alinhada com a lista da memória física
+            itens_ordenados = sorted(mapeamento_ativo.items(), key=lambda item: item[1])
+            for pagina, quadro in itens_ordenados:
+                print(f"      Página {pagina} -> Quadro {quadro}")
+        print() 
 
     def executar_simulacao(self, sequencia_acesso):
         """
