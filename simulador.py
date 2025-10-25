@@ -25,7 +25,7 @@ class MemoryManagementSimulator:
         # Fila para o algoritmo de substituição FIFO.
         self.fila_fifo = deque()
         
-         # Contadores de estatísticas.
+        # Contadores de estatísticas.
         self.falhas_de_pagina = 0
         self.hits = 0 
 
@@ -145,7 +145,6 @@ class MemoryManagementSimulator:
 
 
 # --- FUNÇÃO PRINCIPAL PARA EXECUÇÃO ---
-# --- FUNÇÃO PRINCIPAL PARA EXECUÇÃO ---
 def main():
     """
     Função principal que configura e executa o simulador de forma interativa.
@@ -181,10 +180,3 @@ def main():
 # Garante que a função main() será executada quando o script for rodado
 if __name__ == "__main__":
     main()
-
- # --- PRÓXIMOS PASSOS ---
-    # 1. Tornar as entradas interativas: Permitir que o usuário digite os tamanhos das memórias
-    #    e a sequência de acesso ao invés de usar valores fixos.
-    # 2. Criar mais cenários de teste: Adicionar outras listas de `sequencia_acesso` para
-    #    validar o comportamento do simulador em diferentes condições.
-    # 3. Escrever o relatório e a documentação final do trabalho.
